@@ -23,7 +23,15 @@ model User {
   email String @unique
   password String
   created_at DateTime @default(now())
+  updated_at DateTime @updatedAt 
+   xp Int @default(0)
+   streakDays Int @default(0)
   otps Otp[]
+  dailyTracks dailyTrack[]
+  sentRequests Friend[] @relation("SentRequests")
+  receivedRequests Friend[] @relation("ReceivedRequests")
+  badges userBadges[]
+  tasks Task[]
 }
 model Otp {
   id         Int      @id @default(autoincrement())
@@ -33,4 +41,55 @@ model Otp {
   userId     Int
   user       User     @relation(fields: [userId], references: [id])
 }
+model dailyTrack {
+  id Int @id @default(autoincrement())
+  userId Int
+  date DateTime @default(now())
+  studyTime Int
+  breakTime Int
+  totalTime Int
+  completionPercent Int
+  streak Boolean @default(false)
+  user User @relation(fields: [userId], references: [id])
+  
+}
+model Friend {
+  id Int @id @default(autoincrement())
+
+  senderId Int
+  receiverId Int
+
+  status String @default("pending")
+  score Int @default(0)
+  created_at DateTime @default(now())
+
+  sender User @relation("SentRequests", fields: [senderId], references: [id])
+  receiver User @relation("ReceivedRequests", fields: [receiverId], references: [id])
+
+  @@unique([senderId, receiverId])
+}
+model userBadges {
+  id Int @id @default(autoincrement())
+  name String
+  description String?
+  image String?
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+}
+model Task {
+  id Int @id @default(autoincrement())
+  userId Int
+  subject String
+  description String?
+  duration Int
+  from DateTime
+  to DateTime
+  priority String @default("balanced")
+  completed Boolean @default(false)
+  date DateTime @default(now())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id])
+}
+
 
