@@ -20,6 +20,16 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
   name String?
+  Image String?
+  userName String?
+  Bio String?
+  Age String?
+  Gender String?
+  maxQualification String?
+  links String?
+  Pronounce String?
+  Nationality String?
+  AlmaMater String?
   email String @unique
   password String
   created_at DateTime @default(now())
@@ -32,6 +42,8 @@ model User {
   receivedRequests Friend[] @relation("ReceivedRequests")
   badges userBadges[]
   tasks Task[]
+  weeklyReports weeklyReport[]
+  dailyReports dailyReport[]
 }
 model Otp {
   id         Int      @id @default(autoincrement())
@@ -49,6 +61,7 @@ model dailyTrack {
   breakTime Int
   totalTime Int
   completionPercent Int
+  totalBreak Int @default(0)
   streak Boolean @default(false)
   user User @relation(fields: [userId], references: [id])
   
@@ -90,6 +103,48 @@ model Task {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   user User @relation(fields: [userId], references: [id])
+}
+model weeklyReport {
+  id Int @id @default(autoincrement())
+  description String?
+  hoursStudied Int
+  totalBreaks Int
+  xpEarned  Int
+  badgesEarned Int
+  averageCompletionPercentage Int
+  bestDay String
+  consistencyScore Int
+  suggestions String
+  worstDay  String
+  topSubject String
+  lowestSubject String
+  averageStudyTime Int
+  percentile  Int
+  user_Id   Int
+  user User @relation(fields: [user_Id], references: [id])
+}
+model dailyReport {
+  id Int @id @default(autoincrement())
+  description String?
+  hoursStudied Int
+  totalBreaks Int
+  xpEarned  Int
+  badgesEarned Int
+  averageCompletionPercentage Int
+  suggestions String
+  topSubject String
+  lowestSubject String
+  user_Id   Int
+  user User @relation(fields: [user_Id], references: [id])
+}
+
+model tempOtp {
+  id Int @id @default(autoincrement())
+  otp String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  email String
+  verified Boolean @default(false)
 }
 
 
